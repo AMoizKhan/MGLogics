@@ -1,22 +1,45 @@
-import React, { useEffect, useState } from "react";
+// frontend/components/ProductList.jsx
+import React from 'react';
+import { ResourceList, Checkbox, Thumbnail } from '@shopify/polaris';
 
-export default function ProductList() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch("/products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
-
+const ProductList = ({ products, selectedProducts, onProductToggle }) => {
   return (
-    <div>
-      <h1>Products</h1>
-      <ul>
-        {products.map((p) => (
-          <li key={p.id}>{p.title}</li>
-        ))}
-      </ul>
-    </div>
+    <ResourceList
+      resourceName={{ singular: 'product', plural: 'products' }}
+      items={products}
+      renderItem={(product) => {
+        const { id, title, price, image } = product;
+        const isSelected = selectedProducts.includes(id);
+        
+        return (
+          <ResourceList.Item
+            id={id.toString()}
+            media={
+              image ? (
+                <Thumbnail
+                  source={image}
+                  alt={title}
+                />
+              ) : null
+            }
+            accessibilityLabel={`Select ${title}`}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Checkbox
+                label=""
+                checked={isSelected}
+                onChange={() => onProductToggle(id)}
+              />
+              <div style={{ marginLeft: '12px', flex: 1 }}>
+                <h3>{title}</h3>
+                <p>${price}</p>
+              </div>
+            </div>
+          </ResourceList.Item>
+        );
+      }}
+    />
   );
-}
+};
+
+export default ProductList;
