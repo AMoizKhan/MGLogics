@@ -47,13 +47,11 @@ Rails.application.routes.draw do
   
   root to: 'home#index'
   
-  resources :product_syncs, only: [:index, :create, :update, :destroy]
+  resources :product_syncs, only: [:index, :update, :destroy]
   get '/stores', to: 'stores#index'
   get '/products', to: 'products#index'
   post '/products/sync', to: 'products#create'
-  get '/product_picker', to: 'product_picker#index'
   
-  # Webhook endpoints
   post '/webhooks/products_update', to: 'webhooks#products_update'
   post '/webhooks/products_create', to: 'webhooks#products_create'
   
